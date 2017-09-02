@@ -1,0 +1,36 @@
+{
+  "name": "dir-snap",
+  "version": "0.0.1",
+  "description": "This compares the contents of a directory against a previous snapshot.",
+  "keywords": [
+    "directory",
+    "compare",
+    "folders",
+    "snapshot"
+  ],
+  "main": "./core/snapshot.js",
+  "bin": {
+    "dirsnap": "./bin/dirsnap"
+  },
+  "author": "Lance Turri",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LanceTurri/dir-snap"
+  },
+  "scripts": {
+    "test": "mocha",
+    "debug": "node --debug-brk index.js --folder test --verbose"
+  },
+  "dependencies": {
+    "commander": "^2.11.0",
+    "md5": "^2.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb-base": "^11.3.2",
+    "eslint-plugin-import": "^2.7.0",
+    "mocha": "^3.5.0"
+  },
+  "preferGlobal": true,
+  "license": "MIT"
+}

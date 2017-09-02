@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+ 
+const program = require('commander');    
+
+program
+    .version('0.0.1')
+    .command('reference', 'Create a new reference snapshot.')
+    .command('compare', 'Compare two snapshots. Uses the latest JSON snapshot and reference.')
+    .command('approve', 'Approve the most recent snapshot for future tests.')
+    .command('reset', 'Removes all reference files in directory.')
+    .parse(process.argv);

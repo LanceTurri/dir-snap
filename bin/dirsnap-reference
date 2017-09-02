@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const snapshot = require('../core/snapshot.js');
+
+program
+ .option('-e, --ext [filetype]', 'Search for this filetype [js]', 'js')
+ .option('-f, --folder [folder]', 'The parent folder you want to take a snapshot of [folder]', './my-project')
+ .option('-d, --debug', 'Enable verbose output for debugging purposes.')
+ .parse(process.argv);
+
+if (!program.ext) {
+    throw new Error('You must pass a filetype to look for.');
+}
+
+if (!program.folder) {
+    throw new Error('You must pass in a parent folder to look in.');
+}
+
+snapshot(program.folder, program.ext, program.debug).then(() => {
+    console.log('Reference file create successfully.');
+});
