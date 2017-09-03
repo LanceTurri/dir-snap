@@ -94,11 +94,10 @@ describe('UTILITY: deleteReferences.js', function() {
 // COMMAND FUNCTIONS
 // ============================================================================
 describe('dirsnap reference command', function() {
-    it('generates a snapshot properly', function(done) {
+    it('generates a snapshot properly', function() {
         const referencePath = path.join('test', 'testParent');
-        snapshot(referencePath, 'js').then((fileListing) => {
+        return snapshot(referencePath, 'js').then((fileListing) => {
             assert.deepEqual(fileListing, jsReference.files);
-            done()
         });
     });
 
@@ -112,7 +111,7 @@ describe('dirsnap reference command', function() {
 
     it('handles a file passed in instead of a directory', function() {
         const filePath = path.join('test', 'testParent', '.dirsnap', 'jsFileReference.json');
-        snapshot(filePath, 'js').catch((error) => { 
+        return snapshot(filePath, 'js').catch((error) => { 
             // Just test that an error was properly returned.
             assert.equal(error, 'The parent folder MUST be a directory');
         });
