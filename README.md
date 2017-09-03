@@ -4,6 +4,7 @@
 
 # dir-snap - A snappy directory snapshot tool
 [![Build Status](https://travis-ci.org/LanceTurri/dir-snap.svg?branch=develop)](https://travis-ci.org/LanceTurri/dir-snap)
+[![Coverage Status](https://coveralls.io/repos/github/LanceTurri/dir-snap/badge.svg?branch=develop)](https://coveralls.io/github/LanceTurri/dir-snap?branch=develop)
 
 This module makes it easy to compare before and after snapshots of your project's filesystem. Simply use `dirsnap` to create a reference point (`dirsnap reference`), then make as many changes as you want. When you want to see what has changed, run a compare (`dirsnap compare`) and the files that have been altered will be displayed.
 
