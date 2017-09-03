@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "debug": "DEBUG=* node --inspect-brk ./bin/dirsnap-reference --folder test/testParent"
   },
   "dependencies": {
