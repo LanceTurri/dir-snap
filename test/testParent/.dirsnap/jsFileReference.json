@@ -1,0 +1,13 @@
+{
+    "cwd": "/Users/Commander/Git/dir-snap/test/testParent",
+    "date": "2017-09-03T03:06:23.079Z",
+    "ext": "js",
+    "files": {
+        "/Users/Commander/Git/dir-snap/test/testParent": {
+            "javascript.js": "496dd81dea39fb0b0c07be50c2fc67a3",
+            "javascript.min.js": "1d6a42d2095f51127215e64c5f67da11"
+        },
+        "/Users/Commander/Git/dir-snap/test/testParent/models": {}
+    },
+    "folder": "./"
+}

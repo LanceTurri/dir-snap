@@ -1,14 +1,16 @@
 const fs = require('fs');
-const md5 = require('md5');
 const path = require('path');
+const md5 = require('md5');
+const isBlacklisted = require('../helpers/isBlacklistedFolder');
 
-module.exports = (folder, ext, debug) => {
-    // TODO: Add the ability to store everything in a single file.
-    // TODO: Write the various configuration options into a JSON file to rerun tests.
-    // TODO: Use date in the filename for the compare method.
+const fileLog = require('debug')('file');
+const folderLog = require('debug')('folder');
+
+module.exports = (parentFolder, ext) => {
+    // TODO: Add ability to pass in folders to exclude from matching.
 
     // This is the global objects that store the file names and hashes
-    // After all promises are resolved this will be written to a JSON file.
+    // After all promises are resolved this will be returned.
     const fileListing = {};
 
     const processFile = (file, folder) => {
@@ -21,10 +23,7 @@ module.exports = (folder, ext, debug) => {
                 const hash = md5(data);
 
                 if (path.extname(file) === `.${ext}`) {
-                    if (debug) {
-                        console.log(`File ${file} matches the extension ${ext}.`)
-                    }
-
+                    fileLog(`File ${file} matches the extension ${ext}.`);
                     fileListing[folder][file] = hash;
                 }
 
@@ -33,12 +32,17 @@ module.exports = (folder, ext, debug) => {
         });
     };
 
-    const processFolder = (parentFolder) => {
+    const processFolder = (folder) => {
+        if (isBlacklisted(folder)) {
+            // Generate an immediate promise and return it.
+            return new Promise(resolve => resolve());
+        }
+
         return new Promise((resolve, reject) => {
             // Set an entry in the array for each new folder.
-            fileListing[parentFolder] = {};
+            fileListing[folder] = {};
 
-            fs.readdir(parentFolder, (error, files) => {
+            fs.readdir(folder, (error, files) => {
                 if (error) {
                     reject(error);
                 }
@@ -47,58 +51,54 @@ module.exports = (folder, ext, debug) => {
                 const promisesArray = [];
 
                 files.forEach((item) => {
-                    const filePath = `${parentFolder}/${item}`;
+                    const filePath = path.join(folder, item);
                     const fileStats = fs.statSync(filePath);
 
                     if (fileStats.isDirectory()) {
-                        if (debug) {
-                            console.log(`DIRECTORY: ${filePath}`);
-                        }
-
+                        folderLog(`DIRECTORY: ${filePath}`);
                         promisesArray.push(processFolder(filePath));
                     } else {
-                        if (debug) {
-                            console.log(`FILE: ${filePath}`);
-                        }
-
-                        promisesArray.push(processFile(item, parentFolder));
+                        fileLog(`FILE: ${filePath}`);
+                        promisesArray.push(processFile(item, folder));
                     }
                 });
 
                 Promise.all(promisesArray).then(() => {
-                    console.log('All Folders have been processed');
+                    folderLog('All Folders have been processed');
                     resolve();
-                }, () => reject(error));
+                }).catch(() => reject(error));
             });
         });
     };
 
-    const writeOjects = () => {
-        // Write objects to a file to compare later
-        console.log('Writing files...');
-        fs.writeFileSync(`../reference/${ext}FileReference.json`, JSON.stringify(file, null, 4));
-    };
+    return new Promise((resolve, reject) => {
+        let folderPath = path.join(process.cwd(), parentFolder);
+        let parentStats = null;
 
-    const run = () => {
-        return new Promise((resolve, reject) => {
-            const parentStats = fs.statSync(startFolder);
+        // HACK: If a folder is not passed in, the default path is ./
+        // This causes a separator to be appended to the end of the object key
+        // which will cause issues with the compare function.
+        if (folderPath.lastIndexOf(path.sep) === folderPath.length - 1) {
+            folderPath = folderPath.substring(0, folderPath.length - 1);
+        }
 
-            if (parentStats.isDirectory()) {
-                processFolder(startFolder).then(() => {
-                    resolve();
-                }, (error) => {
-                    reject(error);
-                });
-            } else {
-                reject('The parent folder MUST be a directory');
-            }
-        });
-    };
+        // First try to get stats on the parent directory.
+        try {
+            parentStats = fs.statSync(folderPath);
+        } catch (error) {
+            console.error(error);
+            process.exit(1);
+        }
 
-    run().then(() => {
-        writeOjects();
-        return true;
-    }, (error) => {
-        throw new Error(error);
+        // If it's a directory, kick off all of the promises to inspect the files.
+        if (parentStats.isDirectory()) {
+            processFolder(folderPath).then(() => {
+                resolve(fileListing);
+            }).catch((error) => {
+                reject(error);
+            });
+        } else {
+            reject('The parent folder MUST be a directory');
+        }
     });
 };

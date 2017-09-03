@@ -1,22 +1,38 @@
 #!/usr/bin/env node
 
+const fs = require('fs');
+const path = require('path');
+const chalk = require('chalk');
+const jsonDiff = require('json-diff');
 const program = require('commander');
-const snapshot = require('../core/snapshot.js');
+const snapshot = require('../core/snapshot');
 
 program
- .option('-e, --ext [filetype]', 'Search for this filetype [js]', 'js')
- .option('-f, --folder [folder]', 'The parent folder you want to take a snapshot of [folder]', './my-project')
- .option('-d, --debug', 'Enable verbose output for debugging purposes.')
+ .option('-e, --ext [extension]', 'Only compare files with this extension.')
+ .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', './')
  .parse(process.argv);
 
 if (!program.ext) {
-    throw new Error('You must pass a filetype to look for.');
+    console.log(chalk.red('You must pass a filetype to look for (ex: dirsnap compare --ext js).'));
 }
 
-if (!program.folder) {
-    throw new Error('You must pass in a parent folder to look in.');
-}
+const referenceFilePath = path.join(process.cwd(), program.folder, '.dirsnap', `${program.ext}FileReference.json`);
 
-snapshot(program.folder, program.ext, program.debug).then(() => {
-    console.log('Compare is outputing now...');
-});
+if (fs.existsSync(referenceFilePath)) {
+    snapshot(program.folder, program.ext).then((fileListing) => {
+        const referenceData = JSON.parse(fs.readFileSync(referenceFilePath));
+        const results = jsonDiff.diffString(referenceData.files, fileListing);
+
+        if (results) {
+            console.log(chalk.blue('These are the files that changed:'));
+            console.log(results);
+            process.exit();
+        }
+
+        console.log(chalk.blue('No changes detected!'));
+        process.exit();
+    }).catch((error) => {
+        console.log(chalk.red(error));
+        process.exit(1);
+    });
+}

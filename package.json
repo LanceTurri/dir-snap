@@ -1,6 +1,6 @@
 {
   "name": "dir-snap",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "This compares the contents of a directory against a previous snapshot.",
   "keywords": [
     "directory",
@@ -19,10 +19,13 @@
   },
   "scripts": {
     "test": "mocha",
-    "debug": "node --debug-brk index.js --folder test --verbose"
+    "debug": "DEBUG=* node --inspect-brk core/debug.js --folder test/testParent"
   },
   "dependencies": {
+    "chalk": "^2.1.0",
     "commander": "^2.11.0",
+    "debug": "^3.0.1",
+    "json-diff": "^0.5.1",
     "md5": "^2.2.1"
   },
   "devDependencies": {

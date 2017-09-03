@@ -1,22 +1,40 @@
 #!/usr/bin/env node
 
+const fs = require('fs');
+const path = require('path');
+const chalk = require('chalk');
+const debug = require('debug')('snapshot');
 const program = require('commander');
-const snapshot = require('../core/snapshot.js');
+const snapshot = require('../core/snapshot');
+const ensureFolderExists = require('../helpers/ensureFolderExistence');
 
 program
- .option('-e, --ext [filetype]', 'Search for this filetype [js]', 'js')
- .option('-f, --folder [folder]', 'The parent folder you want to take a snapshot of [folder]', './my-project')
- .option('-d, --debug', 'Enable verbose output for debugging purposes.')
- .parse(process.argv);
+    .option('-e, --ext [extension]', 'Only reference files with this extension.')
+    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', './')
+    .parse(process.argv);
 
 if (!program.ext) {
-    throw new Error('You must pass a filetype to look for.');
+    console.log(chalk.red('You must pass a filetype to look for.'));
+    process.exit(1);
 }
 
-if (!program.folder) {
-    throw new Error('You must pass in a parent folder to look in.');
-}
+snapshot(program.folder, program.ext).then((fileListing) => {
+    // Write objects to a file to compare later
+    debug('Writing files...');
 
-snapshot(program.folder, program.ext, program.debug).then(() => {
-    console.log('Reference file create successfully.');
+    const referenceFolderPath = path.join(process.cwd(), program.folder, '.dirsnap');
+    const snapshotJson = {
+        cwd: process.cwd(),
+        date: new Date(),
+        ext: program.ext,
+        files: fileListing,
+        folder: program.folder,
+    };
+
+    if (!ensureFolderExists(referenceFolderPath)) {
+        fs.mkdirSync(referenceFolderPath);
+    }
+
+    fs.writeFileSync(`${referenceFolderPath}/${program.ext}FileReference.json`, JSON.stringify(snapshotJson, null, 4));
+    debug('Reference file created successfully.');
 });

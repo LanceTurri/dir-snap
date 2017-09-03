@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const chalk = require('chalk');
+const deleteReference = require('../helpers/deleteReferences');
+const program = require('commander');
+
+program
+    .option('-e, --ext [extension]', 'The specific extension reference file to remove.')
+    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', './')
+    .parse(process.argv);
+
+if (program.ext) {
+    // Only delete the reference file for the specific file extension
+    const referencePath = path.join(process.cwd(), program.folder, '.dirsnap', `${program.ext}FileReference.json`);
+    console.log(chalk.magenta(`Deleting the ${program.ext} reference file now.`));
+
+    deleteReference(referencePath);
+} else {
+    // Delete all reference files in the .dirsnap directory.
+    const referencePath = path.join(process.cwd(), program.folder, '.dirsnap');
+    console.log(chalk.magenta(`Deleting the reference folder at ${referencePath}.`));
+
+    deleteReference(referencePath);
+}
