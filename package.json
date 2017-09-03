@@ -1,6 +1,6 @@
 {
   "name": "dir-snap",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "This compares the contents of a directory against a previous snapshot.",
   "keywords": [
     "directory",

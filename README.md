@@ -79,7 +79,7 @@ $ dirsnap list -f [folder]
 `reset` will delete one or all reference files for a specific folder. Use if you need to start over or have made significant changes to the folder structure.
 
 ```sh
-$ dirsnap reset -f [folder]
+$ dirsnap reset -f [folder] -e [ext]
 ```
 
 > NOTE: If a folder is not passed in, this command will delete all reference files tied to the current working directory.
