@@ -42,12 +42,16 @@ module.exports = (parentFolder, ext) => {
         }
 
         return new Promise((resolve, reject) => {
-            // Set an entry in the array for each new folder.
-            fileListing[folder] = {};
-
             fs.readdir(folder, (error, files) => {
                 if (error) {
                     reject(error);
+                }
+
+                // TODO: This still creates an empty entry when a folder exists with files
+                // that do not have the extension we are looking for.
+                if (files.length > 0) {
+                    // Set an entry in the array for each new folder.
+                    fileListing[folder] = {};
                 }
 
                 // Array of processFile or processFolder promises.
