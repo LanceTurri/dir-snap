@@ -1,7 +1,9 @@
+
 ![dir-snap](./images/logo.png)
 
-# dir-snap (Directory Snapshots)
-> A library for comparing snapshots of files and folders on your system.
+
+# dir-snap - A snappy directory snapshot tool
+[![Build Status](https://travis-ci.org/LanceTurri/dir-snap.svg?branch=develop)](https://travis-ci.org/LanceTurri/dir-snap)
 
 This module makes it easy to compare before and after snapshots of your project's filesystem. Simply use `dirsnap` to create a reference point (`dirsnap reference`), then make as many changes as you want. When you want to see what has changed, run a compare (`dirsnap compare`) and the files that have been altered will be displayed.
 
@@ -21,7 +23,7 @@ $ yarn global add dir-snap
 
 ## Usage
 
-Please note that the command to use in the CLI is `dirsnap` with no hypen.
+> Please note that the command to use in the CLI is `dirsnap` with no hypen.
 
 ### Reference
 
@@ -33,7 +35,7 @@ $ dirsnap reference -f [folder] -e <ext>
 
 When the scanning has completed, a reference JSON file will be written in the `.dirsnap` folder of the project to be used later during a compare. This library currently uses the MD5 checksum of a file for comparison purposes.
 
-NOTE: The filename will be `${extension}FileReference.json`.
+> NOTE: The filename will be `${extension}FileReference.json`.
 
 An example of the JSON structure looks like this:
 ```javascript
@@ -79,7 +81,7 @@ $ dirsnap list -f [folder]
 $ dirsnap reset -f [folder]
 ```
 
-NOTE: If a folder is not passed in, this command will delete all reference files tied to the current working directory.
+> NOTE: If a folder is not passed in, this command will delete all reference files tied to the current working directory.
 
 ## License
 
