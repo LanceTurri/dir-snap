@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
+const debug = require('debug')('delete');
 
 module.exports = (referencePath) => {
     if (fs.existsSync(referencePath)) {
@@ -12,15 +13,15 @@ module.exports = (referencePath) => {
             });
 
             fs.rmdirSync(referencePath);
-            console.log(chalk.green(`All reference files in ${referencePath} have been deleted.`));
-            process.exit();
-        } else {
-            fs.unlinkSync(referencePath);
-            console.log(chalk.green(`Reference file in ${referencePath} was deleted.`));
-            process.exit();
+            debug(chalk.green(`All reference files in ${referencePath} have been deleted.`));
+            return true;
         }
+
+        fs.unlinkSync(referencePath);
+        debug(chalk.green(`Reference file in ${referencePath} was deleted.`));
+        return true;
     }
 
-    console.log(chalk.red(`The location ${referencePath} does not exist!`));
-    process.exit(1);
+    debug(chalk.red(`The location ${referencePath} does not exist!`));
+    return false;
 };

@@ -14,6 +14,11 @@ module.exports = (parentFolder, ext) => {
     const fileListing = {};
 
     const processFile = (file, folder) => {
+        if (path.extname(file) !== `.${ext}`) {
+            fileLog(`File ${file} does not match the extension ${ext}.`);
+            return new Promise(resolve => resolve());
+        }
+
         return new Promise((resolve, reject) => {
             fs.readFile(path.join(folder, file), (error, data) => {
                 if (error) {
@@ -22,10 +27,8 @@ module.exports = (parentFolder, ext) => {
 
                 const hash = md5(data);
 
-                if (path.extname(file) === `.${ext}`) {
-                    fileLog(`File ${file} matches the extension ${ext}.`);
-                    fileListing[folder][file] = hash;
-                }
+                fileLog(`File ${file} matches the extension ${ext}.`);
+                fileListing[folder][file] = hash;
 
                 resolve();
             });
@@ -86,8 +89,7 @@ module.exports = (parentFolder, ext) => {
         try {
             parentStats = fs.statSync(folderPath);
         } catch (error) {
-            console.error(error);
-            process.exit(1);
+            reject('Cannot get stats on the path passed in.');
         }
 
         // If it's a directory, kick off all of the promises to inspect the files.

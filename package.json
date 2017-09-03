@@ -1,6 +1,6 @@
 {
   "name": "dir-snap",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "This compares the contents of a directory against a previous snapshot.",
   "keywords": [
     "directory",
@@ -18,15 +18,16 @@
     "url": "https://github.com/LanceTurri/dir-snap"
   },
   "scripts": {
-    "test": "mocha",
-    "debug": "DEBUG=* node --inspect-brk core/debug.js --folder test/testParent"
+    "test": "nyc mocha",
+    "debug": "DEBUG=* node --inspect-brk ./bin/dirsnap-reference --folder test/testParent"
   },
   "dependencies": {
     "chalk": "^2.1.0",
     "commander": "^2.11.0",
     "debug": "^3.0.1",
     "json-diff": "^0.5.1",
-    "md5": "^2.2.1"
+    "md5": "^2.2.1",
+    "nyc": "^11.1.0"
   },
   "devDependencies": {
     "eslint": "^4.5.0",
