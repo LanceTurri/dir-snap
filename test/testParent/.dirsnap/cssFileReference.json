@@ -1,0 +1,13 @@
+{
+    "cwd": "/Users/Commander/Git/dir-snap/test/testParent",
+    "date": "2017-09-04T02:47:25.267Z",
+    "ext": "css",
+    "files": {
+        "/Users/Commander/Git/dir-snap/test/testParent": {
+            "css.css": "d84a5e5018dd163a3d0c39cbb5d31d6c",
+            "css.min.css": "d84a5e5018dd163a3d0c39cbb5d31d6c"
+        },
+        "/Users/Commander/Git/dir-snap/test/testParent/models": {}
+    },
+    "folder": "./"
+}
