@@ -3,6 +3,8 @@
 
 
 # dir-snap - A snappy directory snapshot tool
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/LanceTurri/dir-snap.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/LanceTurri/dir-snap.svg?branch=develop)](https://travis-ci.org/LanceTurri/dir-snap)
 [![Coverage Status](https://coveralls.io/repos/github/LanceTurri/dir-snap/badge.svg?branch=develop)](https://coveralls.io/github/LanceTurri/dir-snap?branch=develop)
 
