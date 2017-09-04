@@ -3,14 +3,13 @@
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
-const debug = require('debug')('snapshot');
 const program = require('commander');
 const snapshot = require('../core/snapshot');
 const ensureFolderExists = require('../helpers/ensureFolderExistence');
 
 program
     .option('-e, --ext [extension]', 'Only reference files with this extension.')
-    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', './')
+    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', `.${path.sep}`)
     .parse(process.argv);
 
 if (!program.ext) {
@@ -20,7 +19,7 @@ if (!program.ext) {
 
 snapshot(program.folder, program.ext).then((fileListing) => {
     // Write objects to a file to compare later
-    debug('Writing files...');
+    console.log(chalk.cyan('Shapshot was successful. Writing reference file now...'));
 
     const referenceFolderPath = path.join(process.cwd(), program.folder, '.dirsnap');
     const snapshotJson = {
@@ -36,5 +35,5 @@ snapshot(program.folder, program.ext).then((fileListing) => {
     }
 
     fs.writeFileSync(`${referenceFolderPath}/${program.ext}FileReference.json`, JSON.stringify(snapshotJson, null, 4));
-    debug('Reference file created successfully.');
+    console.log(chalk.green(`Reference file ${program.ext}FileReference.json created successfully.`));
 });

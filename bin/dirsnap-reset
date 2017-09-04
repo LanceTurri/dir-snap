@@ -7,19 +7,21 @@ const program = require('commander');
 
 program
     .option('-e, --ext [extension]', 'The specific extension reference file to remove.')
-    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', './')
+    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', `.${path.sep}`)
     .parse(process.argv);
 
 if (program.ext) {
     // Only delete the reference file for the specific file extension
     const referencePath = path.join(process.cwd(), program.folder, '.dirsnap', `${program.ext}FileReference.json`);
-    console.log(chalk.magenta(`Deleting the ${program.ext} reference file now.`));
+    console.log(chalk.cyan(`Deleting the ${program.ext} reference file now.`));
 
     deleteReference(referencePath);
+    console.log(chalk.green(`Deleted ${program.ext}FileReference.json.`));
 } else {
     // Delete all reference files in the .dirsnap directory.
     const referencePath = path.join(process.cwd(), program.folder, '.dirsnap');
-    console.log(chalk.magenta(`Deleting the reference folder at ${referencePath}.`));
+    console.log(chalk.cyan(`Deleting the reference folder at ${referencePath}.`));
 
     deleteReference(referencePath);
+    console.log(chalk.green('Deleted all reference files in the folder.'));
 }

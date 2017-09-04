@@ -9,7 +9,7 @@ const snapshot = require('../core/snapshot');
 
 program
  .option('-e, --ext [extension]', 'Only compare files with this extension.')
- .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', './')
+ .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', `.${path.sep}`)
  .parse(process.argv);
 
 if (!program.ext) {
@@ -24,12 +24,12 @@ if (fs.existsSync(referenceFilePath)) {
         const results = jsonDiff.diffString(referenceData.files, fileListing);
 
         if (results) {
-            console.log(chalk.blue('These are the files that changed:'));
+            console.log(chalk.cyan('These are the files that have changed since the previous snapshot:'));
             console.log(results);
             process.exit();
         }
 
-        console.log(chalk.blue('No changes detected!'));
+        console.log(chalk.green('No changes detected!'));
         process.exit();
     }).catch((error) => {
         console.log(chalk.red(error));

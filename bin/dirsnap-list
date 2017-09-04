@@ -2,12 +2,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
 const debug = require('debug')('list');
 const program = require('commander');
 const printSnapshots = require('../helpers/printSnapshots.js');
 
 program
-    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of', './')
+    .option('-f, --folder [folder]', 'The parent folder to take a snapshot of', `.${path.sep}`)
     .parse(process.argv);
 
 const parentFolderPath = path.join(process.cwd(), program.folder);
@@ -20,7 +21,7 @@ if (fs.existsSync(parentFolderPath)) {
     try {
         snapshots = fs.readdirSync(dirsnapFolderPath);
     } catch (error) {
-        console.error(`The directory at ${dirsnapFolderPath} does not exist.`);
+        console.log(chalk.red(`The directory at ${dirsnapFolderPath} does not exist.`));
         debug(error);
         process.exit(1);
     }
@@ -31,5 +32,6 @@ if (fs.existsSync(parentFolderPath)) {
         printSnapshots(dirsnapFolderPath, snapshots);
     }
 } else {
-    console.error('The parent folder does not exist.');
+    console.log(chalk.red('The parent folder does not exist.'));
+    process.exit(1);
 }
