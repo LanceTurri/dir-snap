@@ -72,9 +72,9 @@ $ dirsnap -f ./my-project -e js
 ```javascript
 $ dirsnap list -f [folder]
 // Example output:
-// NAME: jsFileReference.json
-// EXT:  js
-// DATE: 2017-09-03T03:06:23.079Z
+// EXT DATE                     FILE
+// js  2017-09-03T03:07:24.079Z jsFileReference.json
+// css 2017-09-03T03:06:23.079Z cssFileReference.json
 ```
 
 ### Reset
