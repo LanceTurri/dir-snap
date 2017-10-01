@@ -113,4 +113,5 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/node,macos,windows
 
 yarn.lock
+package-lock.json
 .vscode
