@@ -3,8 +3,8 @@
 const program = require('commander');
 
 program
-    .version('0.0.1')
-    .command('list', 'Lists all snapshots in the present folder.')
+    .version('0.3.0')
+    .command('list', 'Lists all snapshots in the present folder.', { isDefault: true })
     .command('reference', 'Create a new reference snapshot using the current state.')
     .command('compare', 'Compare two snapshots. Creates a new snapshot and uses latest reference file.')
     .command('reset', 'Removes some or all reference files for a directory.')

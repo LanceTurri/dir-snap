@@ -12,8 +12,8 @@ const matchLog = debug('match: ');
 module.exports = (parentFolder, ext) => {
     // TODO: Add ability to pass in folders to exclude from matching.
 
-    // This is the global objects that store the file names and hashes
-    // After all promises are resolved this will be returned.
+    // This is the global object that stores the file names and hashes
+    // After all promises are resolved this will be returned
     const fileListing = {};
 
     const processFile = (file, folder) => {
@@ -96,7 +96,7 @@ module.exports = (parentFolder, ext) => {
         try {
             parentStats = fs.statSync(folderPath);
         } catch (error) {
-            reject('Cannot get stats on the path passed in.');
+            reject(new Error('Cannot get stats on the path passed in.'));
         }
 
         // If it's a directory, kick off all of the promises to inspect the files.
@@ -107,7 +107,7 @@ module.exports = (parentFolder, ext) => {
                 reject(error);
             });
         } else {
-            reject('The parent folder MUST be a directory');
+            reject(new Error('The parent folder MUST be a directory'));
         }
     });
 };

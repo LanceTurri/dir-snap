@@ -10,19 +10,43 @@ const ensureFolderExists = require('../helpers/ensureFolderExistence');
 program
     .option('-e, --ext [extension]', 'Only reference files with this extension.')
     .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', `.${path.sep}`)
+    .option('-s, --store [folder]', 'The relative path of the preferred folder to store the .dirsnap directory in.')
     .parse(process.argv);
 
 if (!program.ext) {
-    console.log(chalk.red('You must pass a filetype to look for.'));
+    console.log(chalk.red('You must pass a filetype to look for (ex: dirsnap reference --ext js).'));
+    program.outputHelp();
     process.exit(1);
 }
+
+// EX1: You are in the current folder and want .dirsnap in that same folder
+//  COMMAND: dirsnap reference
+//
+// EX2: You are in a parent folder, examining a child folder,
+//      and want the .dirsnap directory to be stored in the child folder
+//  COMMAND: dirsnap reference -f ./childFolder
+//
+// EX3: You are in a parent folder, examining a child folder,
+//      and want the .dirsnap directory to be stored in another folder.
+//  COMMAND: dirsnap reference -f ./child/anotherChild -s ./references
+//
+if (!program.store) {
+    program.store = program.folder;
+}
+
+console.log(`Starting snapshot process with options:
+EXT: ${program.ext}
+FOLDER: ${program.folder}
+STORE: ${program.store}
+`);
 
 snapshot(program.folder, program.ext).then((fileListing) => {
     // Write objects to a file to compare later
     console.log(chalk.cyan('Shapshot was successful. Writing reference file now...'));
 
-    const referenceFolderPath = path.join(process.cwd(), program.folder, '.dirsnap');
+    const referenceFolderPath = path.resolve(process.cwd(), program.store, '.dirsnap');
     const snapshotJson = {
+        store: program.store,
         cwd: process.cwd(),
         date: new Date(),
         ext: program.ext,
@@ -36,4 +60,7 @@ snapshot(program.folder, program.ext).then((fileListing) => {
 
     fs.writeFileSync(`${referenceFolderPath}/${program.ext}FileReference.json`, JSON.stringify(snapshotJson, null, 4));
     console.log(chalk.green(`Reference file ${program.ext}FileReference.json created successfully.`));
+}).catch((error) => {
+    console.log(chalk.red(error.message));
+    process.exit(1);
 });
