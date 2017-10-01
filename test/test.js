@@ -104,7 +104,7 @@ describe('dirsnap reference command', function() {
         const nonexistentFolderPath = path.join('test', 'iDoNotExist');
         return snapshot(nonexistentFolderPath, 'js').catch((error) => { 
             // Just test that an error was properly returned.
-            assert.equal(error, 'Cannot get stats on the path passed in.');
+            assert.equal(error, 'Error: Cannot get stats on the path passed in.');
         });
     });
 
@@ -112,7 +112,7 @@ describe('dirsnap reference command', function() {
         const filePath = path.join('test', 'testParent', '.dirsnap', 'jsFileReference.json');
         return snapshot(filePath, 'js').catch((error) => { 
             // Just test that an error was properly returned.
-            assert.equal(error, 'The parent folder MUST be a directory');
+            assert.equal(error, 'Error: The parent folder MUST be a directory');
         });
     });
 });

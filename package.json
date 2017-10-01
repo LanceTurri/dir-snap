@@ -1,12 +1,13 @@
 {
   "name": "dir-snap",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "This compares the contents of a directory against a previous snapshot.",
   "keywords": [
     "directory",
     "compare",
     "folders",
-    "snapshot"
+    "snapshot",
+    "dir"
   ],
   "main": "./core/snapshot.js",
   "bin": {
@@ -24,19 +25,20 @@
   },
   "dependencies": {
     "chalk": "^2.1.0",
+    "cliff": "^0.1.10",
     "commander": "^2.11.0",
-    "coveralls": "^2.13.1",
-    "debug": "^3.0.1",
-    "json-diff": "^0.5.1",
-    "md5": "^2.2.1",
-    "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^11.1.0"
+    "debug": "^3.1.0",
+    "json-diff": "^0.5.2",
+    "md5": "^2.2.1"
   },
   "devDependencies": {
-    "eslint": "^4.5.0",
-    "eslint-config-airbnb-base": "^11.3.2",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb-base": "^12.0.1",
     "eslint-plugin-import": "^2.7.0",
-    "mocha": "^3.5.0"
+    "mocha": "^3.5.3",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^11.2.1"
   },
   "preferGlobal": true,
   "license": "MIT"

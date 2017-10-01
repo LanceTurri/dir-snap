@@ -9,14 +9,21 @@ const snapshot = require('../core/snapshot');
 
 program
  .option('-e, --ext [extension]', 'Only compare files with this extension.')
- .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', './')
+ .option('-f, --folder [folder]', 'The parent folder to take a snapshot of.', `.${path.sep}`)
+ .option('-s, --store [folder]', 'The relative path of the reference folder to use during the compare.')
  .parse(process.argv);
 
 if (!program.ext) {
     console.log(chalk.red('You must pass a filetype to look for (ex: dirsnap compare --ext js).'));
+    program.outputHelp();
+    process.exit(1);
 }
 
-const referenceFilePath = path.join(process.cwd(), program.folder, '.dirsnap', `${program.ext}FileReference.json`);
+if (!program.store) {
+    program.store = program.folder;
+}
+
+const referenceFilePath = path.resolve(process.cwd(), program.store, '.dirsnap', `${program.ext}FileReference.json`);
 
 if (fs.existsSync(referenceFilePath)) {
     snapshot(program.folder, program.ext).then((fileListing) => {
@@ -24,15 +31,15 @@ if (fs.existsSync(referenceFilePath)) {
         const results = jsonDiff.diffString(referenceData.files, fileListing);
 
         if (results) {
-            console.log(chalk.blue('These are the files that changed:'));
+            console.log(chalk.cyan('These are the files that have changed since the previous snapshot:'));
             console.log(results);
             process.exit();
         }
 
-        console.log(chalk.blue('No changes detected!'));
+        console.log(chalk.green('No changes detected!'));
         process.exit();
     }).catch((error) => {
-        console.log(chalk.red(error));
+        console.log(chalk.red(error.message));
         process.exit(1);
     });
 }

@@ -3,6 +3,8 @@
 
 
 # dir-snap - A snappy directory snapshot tool
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/LanceTurri/dir-snap.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/LanceTurri/dir-snap.svg?branch=develop)](https://travis-ci.org/LanceTurri/dir-snap)
 [![Coverage Status](https://coveralls.io/repos/github/LanceTurri/dir-snap/badge.svg?branch=develop)](https://coveralls.io/github/LanceTurri/dir-snap?branch=develop)
 
@@ -51,7 +53,8 @@ An example of the JSON structure looks like this:
         },
         "/Users/FakeUser/Git/dir-snap/test/testParent/models": {}
     },
-    "folder": "./"
+    "folder": "./",
+    "store": "./"
 }
 ```
 
@@ -60,8 +63,8 @@ An example of the JSON structure looks like this:
 `compare` scans through the folder passed in and produces an updated snapshot to compare with the latest reference file. Once the compare happens, a colorized diff will be logged for all files that have changed since the reference was made.
 
 ```sh
-$ dirsnap -f [folder] -e <ext>
-$ dirsnap -f ./my-project -e js
+$ dirsnap compare -f [folder] -e <ext>
+$ dirsnap compare -f ./my-project -e js
 ```
 
 ### List
@@ -70,9 +73,9 @@ $ dirsnap -f ./my-project -e js
 ```javascript
 $ dirsnap list -f [folder]
 // Example output:
-// NAME: jsFileReference.json
-// EXT:  js
-// DATE: 2017-09-03T03:06:23.079Z
+// EXT DATE                     FILE
+// js  2017-09-03T03:07:24.079Z jsFileReference.json
+// css 2017-09-03T03:06:23.079Z cssFileReference.json
 ```
 
 ### Reset
@@ -83,6 +86,14 @@ $ dirsnap reset -f [folder] -e [ext]
 ```
 
 > NOTE: If a folder is not passed in, this command will delete all reference files tied to the current working directory.
+
+### Specifying a reference directory
+Sometimes the folder being examined is not the best location for the `.dirsnap` directory (e.g. running a test that deletes and then recreates a folder). In these cases, the `store` option can be utilized for the `compare` and `reference` commands to indicate which folder to store the reference files in.
+
+```sh
+$ dirsnap reference -f [folder] -e [ext] -s [referenceFolder]
+$ dirsnap reference -f ./my-project -e js -s ./references
+```
 
 ## License
 

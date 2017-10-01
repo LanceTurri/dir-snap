@@ -1,21 +1,24 @@
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk');
+const debug = require('debug');
 const md5 = require('md5');
 const isBlacklisted = require('../helpers/isBlacklistedFolder');
 
-const fileLog = require('debug')('file');
-const folderLog = require('debug')('folder');
+const fileLog = debug('file:  ');
+const folderLog = debug('folder:');
+const matchLog = debug('match: ');
 
 module.exports = (parentFolder, ext) => {
     // TODO: Add ability to pass in folders to exclude from matching.
 
-    // This is the global objects that store the file names and hashes
-    // After all promises are resolved this will be returned.
+    // This is the global object that stores the file names and hashes
+    // After all promises are resolved this will be returned
     const fileListing = {};
 
     const processFile = (file, folder) => {
         if (path.extname(file) !== `.${ext}`) {
-            fileLog(`File ${file} does not match the extension ${ext}.`);
+            matchLog(`File ${file} ${chalk.bgRed.white(' does not match ')} the extension ${ext}.`);
             return new Promise(resolve => resolve());
         }
 
@@ -27,7 +30,7 @@ module.exports = (parentFolder, ext) => {
 
                 const hash = md5(data);
 
-                fileLog(`File ${file} matches the extension ${ext}.`);
+                matchLog(`File ${file} ${chalk.bgGreen.white(' matches ')} the extension ${ext}.`);
                 fileListing[folder][file] = hash;
 
                 resolve();
@@ -62,18 +65,18 @@ module.exports = (parentFolder, ext) => {
                     const fileStats = fs.statSync(filePath);
 
                     if (fileStats.isDirectory()) {
-                        folderLog(`DIRECTORY: ${filePath}`);
+                        folderLog(filePath);
                         promisesArray.push(processFolder(filePath));
                     } else {
-                        fileLog(`FILE: ${filePath}`);
+                        fileLog(filePath);
                         promisesArray.push(processFile(item, folder));
                     }
                 });
 
                 Promise.all(promisesArray).then(() => {
-                    folderLog('All Folders have been processed');
+                    folderLog(`All items have been processed in ${folder}`);
                     resolve();
-                }).catch(() => reject(error));
+                }).catch(promiseError => reject(promiseError));
             });
         });
     };
@@ -93,7 +96,7 @@ module.exports = (parentFolder, ext) => {
         try {
             parentStats = fs.statSync(folderPath);
         } catch (error) {
-            reject('Cannot get stats on the path passed in.');
+            reject(new Error('Cannot get stats on the path passed in.'));
         }
 
         // If it's a directory, kick off all of the promises to inspect the files.
@@ -104,7 +107,7 @@ module.exports = (parentFolder, ext) => {
                 reject(error);
             });
         } else {
-            reject('The parent folder MUST be a directory');
+            reject(new Error('The parent folder MUST be a directory'));
         }
     });
 };
