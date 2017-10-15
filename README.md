@@ -95,6 +95,24 @@ $ dirsnap reference -f [folder] -e [ext] -s [referenceFolder]
 $ dirsnap reference -f ./my-project -e js -s ./references
 ```
 
+## API
+If you would like to use the snapshot functionality from another program, you can require dir-snap from any node project. The snapshot method returns a promise with the file listing upon a successful run.
+
+```javascript
+const dirsnap = require('dir-snap');
+
+const parentFolder = './test/testingParent';
+const ext = 'js';
+
+dirsnap(parentFolder, ext)
+    .then((fileListing) => {
+        // Perform any logic on fileListing here.
+    }).catch((error) => {
+        console.log(error.message);
+        process.exit(1);
+    });
+```
+
 ## License
 
 Copyright Lance Turri. Released under the terms of the MIT license.
