@@ -38,7 +38,7 @@
     "eslint-plugin-import": "^2.7.0",
     "mocha": "^5.0.0",
     "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^11.2.1"
+    "nyc": "^12.0.1"
   },
   "preferGlobal": true,
   "license": "MIT"
